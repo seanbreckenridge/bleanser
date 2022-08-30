@@ -11,7 +11,7 @@ main() {
   mkdir -p ~/.cache/removed
   default_args=(--move ~/.cache/removed)
   for sort_type in name size; do
-    args+=("${default_args[@]}")
+    args=("${default_args[@]}")
     args+=(--sort-by "$sort_type")
     for bash_dirs in ~/data/bash ~/data/bash_history; do
       python3 ./scripts/bash.py prune "${bash_dirs}" --threads 4 "${default_args[@]}"
