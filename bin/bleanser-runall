@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# runs all bleanser jobs
 
 set -o pipefail
 set -e
 
 THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-cd "${THIS_DIR}" || exit $?
+cd "${THIS_DIR}/.." || exit $?
 
 main() {
   local default_args args

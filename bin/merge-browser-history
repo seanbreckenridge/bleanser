@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# backs up browser databases to cache and merges all visits into a JSON file
+
+set -o pipefail
+set -ex
+
+epoch() {
+  date +"%s"
+}
+
+main() {
+  local tmpdir tmpfile browsing_dir
+  tmpdir="$(mktemp -d)"
+  browsing_dir="$(python3 -m my.utils.backup_to browsing)"
+  # backup anything that exists to cache
+  rsync -Pavh "${browsing_dir}"/ ~/.cache/browsing
+  tmpfile="${tmpdir}/browsing-$(epoch).json"
+  browserexport --debug merge --json "${browsing_dir}/"* >"$tmpfile"
+  rm -v "${browsing_dir}/"*
+  mv -v "${tmpfile}" "${browsing_dir}"
+  dust "${browsing_dir}"
+  rm -i ~/.cache/browsing/*.json
+}
+
+main || exit $?
