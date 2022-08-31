@@ -1,17 +1,13 @@
-import json
-from pathlib import Path
-from typing import Iterator, Any
+from typing import Iterator, Any, Dict
 
 
-from shell import ShellNormalizer
+from line_normalizer import JsonLineNormalizer
 
 
-class Normalizer(ShellNormalizer):
+class Normalizer(JsonLineNormalizer):
     @classmethod
-    def parse_file(cls, path: Path) -> Iterator[Any]:
-        # use timestamp from JSON blob to determine unique games
-        json_blob = json.loads(path.read_text())
-        for b in json_blob:
+    def handle_json(cls, data: Dict[Any, Any]) -> Iterator[Any]:
+        for b in data:
             # lichess/chess.com keys for time
             assert "createdAt" in b or "end_time" in b, f"missing end time key {b}"
             for key in ("createdAt", "end_time"):

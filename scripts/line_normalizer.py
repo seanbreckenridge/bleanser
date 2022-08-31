@@ -1,12 +1,20 @@
 import re
+import json
 from pathlib import Path
-from typing import Iterator, TextIO, Any
+from typing import Iterator, TextIO, Any, Dict
 from contextlib import contextmanager
 
 from bleanser.core.processor import BaseNormaliser
 
 
-class ShellNormalizer(BaseNormaliser):
+class LineNormalizer(BaseNormaliser):
+    """
+    Given a input path, the `parse_file` function returns something that
+    can be converted to a string, to represent a unique 'snapshot' for this file
+
+    those can then be compared to elliminate redundant backups
+    """
+
     MULTIWAY = True
     PRUNE_DOMINATED = True
 
@@ -47,7 +55,26 @@ class ShellNormalizer(BaseNormaliser):
         yield cleaned
 
 
+class JsonLineNormalizer(LineNormalizer):
+    """
+    this finds duplicates by emitting unique IDs from a JSON file
+    similar to above, just handles parsing the file as JSON
+    """
+
+    MULTIWAY = True
+    PRUNE_DOMINATED = True
+
+    @classmethod
+    def handle_json(cls, data: Dict[Any, Any]) -> Iterator[Any]:
+        raise NotImplementedError
+
+    @classmethod
+    def parse_file(cls, path: Path) -> Iterator[Any]:
+        data = json.loads(path.read_text())
+        yield from cls.handle_json(data)
+
+
 if __name__ == "__main__":
     # if some file is just lines of commands, could also run this
     # does not have to be specifically bash/zsh
-    ShellNormalizer.main()
+    LineNormalizer.main()

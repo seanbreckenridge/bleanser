@@ -3,10 +3,10 @@ from typing import Iterator, Any
 
 from my.zsh import _parse_file
 
-from shell import ShellNormalizer
+from line_normalizer import LineNormalizer
 
 
-class Normalizer(ShellNormalizer):
+class Normalizer(LineNormalizer):
     @classmethod
     def parse_file(cls, path: Path) -> Iterator[Any]:
         yield from _parse_file(path)
