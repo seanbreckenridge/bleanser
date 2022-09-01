@@ -8,24 +8,24 @@ THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
 cd "${THIS_DIR}/.." || exit $?
 
 main() {
-  local default_args args
-  mkdir -p ~/.cache/removed
-  default_args=(--move ~/.cache/removed)
-  for sort_type in name size; do
-    args=("${default_args[@]}")
-    args+=(--sort-by "$sort_type")
-    for bash_dirs in ~/data/bash ~/data/bash_history; do
-      python3 ./scripts/bash.py prune "${bash_dirs}" "${default_args[@]}"
-    done
-    for json_dir in ~/data/trakt ~/data/listenbrainz ~/data/rexport ~/data/stackexchange; do
-      python3 -m bleanser.modules.json_new prune "${json_dir}" "${default_args[@]}"
-    done
-    for chess_glob in ~/data/chess/chessdotcom_2'*' ~/data/chess/lichess_2'*'; do
-      python3 ./scripts/chess.py prune --glob "${chess_glob}" "${default_args[@]}"
-    done
-    python3 ./scripts/zsh.py prune ~/data/zsh_history "${default_args[@]}"
-    python3 ./scripts/ipython.py prune ~/data/ipython "${default_args[@]}"
-  done
+	local default_args args
+	mkdir -p ~/.cache/removed
+	default_args=(--move ~/.cache/removed)
+	for sort_type in name size; do
+		args=("${default_args[@]}")
+		args+=(--sort-by "$sort_type")
+		for bash_dirs in ~/data/bash ~/data/bash_history; do
+			python3 ./scripts/bash.py prune "${bash_dirs}" "${default_args[@]}"
+		done
+		for json_dir in ~/data/trakt ~/data/listenbrainz ~/data/rexport ~/data/stackexchange; do
+			python3 -m bleanser.modules.json_new prune "${json_dir}" "${default_args[@]}"
+		done
+		for chess_glob in ~/data/chess/chessdotcom_2'*' ~/data/chess/lichess_2'*'; do
+			python3 ./scripts/chess.py prune --glob "${chess_glob}" "${default_args[@]}"
+		done
+		python3 ./scripts/zsh.py prune ~/data/zsh_history "${default_args[@]}"
+		python3 ./scripts/ipython.py prune ~/data/ipython "${default_args[@]}"
+	done
 }
 
 main "$@"

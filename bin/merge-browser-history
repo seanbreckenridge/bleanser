@@ -5,21 +5,21 @@ set -o pipefail
 set -ex
 
 epoch() {
-  date +"%s"
+	date +"%s"
 }
 
 main() {
-  local tmpdir tmpfile browsing_dir
-  tmpdir="$(mktemp -d)"
-  browsing_dir="$(python3 -m my.utils.backup_to browsing)"
-  # backup anything that exists to cache
-  rsync -Pavh "${browsing_dir}"/ ~/.cache/browsing
-  tmpfile="${tmpdir}/browsing-$(epoch).json"
-  browserexport --debug merge --json "${browsing_dir}/"* | jq -c >"$tmpfile"
-  rm -v "${browsing_dir}/"*
-  mv -v "${tmpfile}" "${browsing_dir}"
-  dust "${browsing_dir}"
-  rm -i ~/.cache/browsing/*.json
+	local tmpdir tmpfile browsing_dir
+	tmpdir="$(mktemp -d)"
+	browsing_dir="$(python3 -m my.utils.backup_to browsing)"
+	# backup anything that exists to cache
+	rsync -Pavh "${browsing_dir}"/ ~/.cache/browsing
+	tmpfile="${tmpdir}/browsing-$(epoch).json"
+	browserexport --debug merge --json "${browsing_dir}/"* | jq -c >"$tmpfile"
+	rm -v "${browsing_dir}/"*
+	mv -v "${tmpfile}" "${browsing_dir}"
+	dust "${browsing_dir}"
+	rm -i ~/.cache/browsing/*.json
 }
 
 main || exit $?
