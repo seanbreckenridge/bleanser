@@ -22,6 +22,6 @@ git clone https://github.com/seanbreckenridge/bleanser
 python3 ./scripts/...
 ```
 
-See [`bleanser-runall`](./bleanser-runall) for examples
+See [`bleanser-runall`](./bin/bleanser-runall) for examples
 
 `bin` includes some scripts that I add to my `$PATH` to make running bleanser scripts easier
