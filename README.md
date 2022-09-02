@@ -1,13 +1,15 @@
-Scripts in `scripts` are run manually, the `__main__` block imports from upstream [bleanser](https://github.com/karlicoss/bleanser)
+Scripts in `scripts` are run manually while in the root directory, e.g. `python3 ./scripts/...`
 
 ## Modules
 
-Since these are for my HPI modules, they require those to be installed, see my [HPI repo](https://github.com/seanbreckenridge/HPI#install)
+Since these are to clean up data for my HPI modules, they require those to be installed, see my [HPI repo](https://github.com/seanbreckenridge/HPI#install)
 
 - `zsh` and `bash`, using the format I use from HPI. See the top of the files [on the HPI repo](https://github.com/seanbreckenridge/HPI) for what those look like
 - `ipython`, using the base `sqlite` normalizer
 - `chess` (for `chess.com`/`lichess` dumps) using a custom JSON normalizer
 - `discord` - **WARNING** see the top of [scripts/discord.py](scripts/discord.py) for how this works and some caveats
+- `trakt`, for [traktexport](https://github.com/seanbreckenridge/traktexport) dumps
+- `listenbrainz`, for [listenbrainz](https://github.com/seanbreckenridge/listenbrainz_export)
 
 These are run while in this directory, so:
 

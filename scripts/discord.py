@@ -19,17 +19,17 @@ HPI_TEMPDIR=~/.cache/tdir python3 scripts/discord.py prune ~/data/discord/ --mov
 """
 
 from pathlib import Path
-from typing import Iterator
+from typing import Iterator, Any
 from contextlib import contextmanager
 
 from my.core.structure import match_structure
 from my.discord.data_export import EXPECTED_DISCORD_STRUCTURE
 from discord_data.parse import parse_messages
 
-from bleanser.core.processor import BaseNormaliser
+from line_normalizer import LineNormalizer
 
 
-class Normalizer(BaseNormaliser):
+class Normalizer(LineNormalizer):
     MULTIWAY = True
     PRUNE_DOMINATED = True
 
@@ -40,39 +40,10 @@ class Normalizer(BaseNormaliser):
             assert len(matches) == 1, matches
             yield matches[0]
 
-    @contextmanager
-    def do_cleanup(self, path: Path, *, wdir: Path) -> Iterator[Path]:
-        assert path.stat().st_size > 0, path
-
-        with self.unpacked(path=path, wdir=wdir) as upath:
-
-            tmp_source_dir = upath.absolute().resolve()
-            # name/location in tmpdir
-            # to normalize this, just write msg IDs to the file,
-            # one per line. If a file is a full subset of another, it can be removed
-            fingerprint = (
-                wdir
-                / Path(*tmp_source_dir.parts[1:])
-                / (tmp_source_dir.name + "-fingerprint")
-            )
-            fingerprint.parent.mkdir(parents=True, exist_ok=True)
-
-            message_ids = [
-                m.message_id for m in parse_messages(tmp_source_dir / "messages")
-            ]
-            message_ids.sort()
-
-            with fingerprint.open("w") as fo:
-                for m in message_ids:
-                    print(f"message_{m}", file=fo)
-
-            # this gives it a bit of a speedup
-            from subprocess import check_call
-
-            check_call(["sort", "-o", fingerprint, fingerprint])
-
-        # yield outside unpacked contextmanager so unzipped structure is removed
-        yield fingerprint
+    @classmethod
+    def parse_file(cls, path: Path) -> Iterator[Any]:
+        for msg in parse_messages(path / "messages"):
+            yield msg.message_id
 
 
 if __name__ == "__main__":

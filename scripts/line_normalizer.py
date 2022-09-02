@@ -1,10 +1,26 @@
 import re
 import json
 from pathlib import Path
-from typing import Iterator, TextIO, Any, Dict
+from typing import Iterator, Any, Dict
 from contextlib import contextmanager
+from subprocess import check_call
 
 from bleanser.core.processor import BaseNormaliser
+
+
+def unique_tmpfile(path: Path, wdir: Path) -> Path:
+    tmp_source_dir = path.absolute().resolve()
+    # name/location in tmpdir
+    fingerprint = (
+        wdir / Path(*tmp_source_dir.parts[1:]) / (tmp_source_dir.name + "-fingerprint")
+    )
+    fingerprint.parent.mkdir(parents=True, exist_ok=True)
+    return fingerprint
+
+
+def sort_file(path: Path) -> None:
+    # this gives it a bit of a speedup if all files are sorted
+    check_call(["sort", "-o", path, path])
 
 
 class LineNormalizer(BaseNormaliser):
@@ -18,40 +34,44 @@ class LineNormalizer(BaseNormaliser):
     MULTIWAY = True
     PRUNE_DOMINATED = True
 
-    # should probably override this to return a line from the history file
-    # see zsh.py for an example
     @classmethod
     def parse_file(cls, path: Path) -> Iterator[Any]:
+        """
+        should probably override this to return a line from the history file
+        see zsh.py for an example
+        """
         for line in path.open():
             yield line
 
     @classmethod
-    def emit_history_file(cls, path: Path, fo: TextIO) -> None:
-        for ent in cls.parse_file(path):
-            # remove newlines from stringified representation
-            print(re.sub("\n", "", str(ent)), file=fo)
+    def emit_history(cls, unpacked_path: Path, cleaned_path: Path) -> None:
+        """
+        calls parse_file to extract lines from the unpacked path
+        subclasses should probably override that to parse relevant data
+        from the file and yield it back here
+        """
+        with open(cleaned_path, "w") as fo:
+            for ent in cls.parse_file(unpacked_path):
+                # remove newlines from stringified representation
+                print(re.sub("\n", "", str(ent)), file=fo)
 
     @contextmanager
     def do_cleanup(self, path: Path, *, wdir: Path) -> Iterator[Path]:
         assert path.stat().st_size > 0, path
 
+        # if this needs to be unpacked, do that
         with self.unpacked(path=path, wdir=wdir) as upath:
-            pass
-        del path
+            del path
 
-        source = upath.absolute().resolve()
-        # name/location in tmpdir
-        cleaned = wdir / Path(*source.parts[1:]) / (source.name + "-cleaned")
-        cleaned.parent.mkdir(parents=True, exist_ok=True)
+            # create a unique temporary file to write data to
+            cleaned = unique_tmpfile(upath, wdir)
+            # write to it, typically handled by a subclass
+            self.__class__.emit_history(upath, cleaned)
 
-        with cleaned.open("w") as fo:
-            self.__class__.emit_history_file(upath, fo)
+            sort_file(cleaned)
 
-        # this gives it a bit of a speedup
-        from subprocess import check_call
-
-        check_call(["sort", "-o", cleaned, cleaned])
-
+        # at this point if unpacked temporarily extracted something,
+        # it should be removed
         yield cleaned
 
 

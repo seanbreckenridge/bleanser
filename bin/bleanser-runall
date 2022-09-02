@@ -23,6 +23,8 @@ main() {
 		for chess_glob in ~/data/chess/chessdotcom_2'*' ~/data/chess/lichess_2'*'; do
 			python3 ./scripts/chess.py prune --glob "${chess_glob}" "${default_args[@]}"
 		done
+		python3 ./scripts/trakt.py prune --glob ~/data/trakt/2'*' "${default_args[@]}"
+		python3 ./scripts/listenbrainz.py prune --glob ~/data/listenbrainz/2'*' "${default_args[@]}"
 		python3 ./scripts/zsh.py prune ~/data/zsh_history "${default_args[@]}"
 		python3 ./scripts/ipython.py prune ~/data/ipython "${default_args[@]}"
 	done
