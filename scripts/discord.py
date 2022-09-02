@@ -26,7 +26,7 @@ from my.core.structure import match_structure
 from my.discord.data_export import EXPECTED_DISCORD_STRUCTURE
 from discord_data.parse import parse_messages
 
-from line_normalizer import LineNormalizer
+from line_normalizer import LineNormalizer  # type: ignore[import]
 
 
 class Normalizer(LineNormalizer):

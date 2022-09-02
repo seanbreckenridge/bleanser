@@ -1,7 +1,7 @@
 from typing import Iterator, Any, Dict
 
 
-from line_normalizer import JsonLineNormalizer
+from line_normalizer import JsonLineNormalizer  # type: ignore[import]
 
 
 class Normalizer(JsonLineNormalizer):

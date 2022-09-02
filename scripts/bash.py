@@ -3,7 +3,7 @@ from typing import Iterator, Any
 
 from my.bash import _parse_file
 
-from line_normalizer import LineNormalizer
+from line_normalizer import LineNormalizer  # type: ignore[import]
 
 
 class Normalizer(LineNormalizer):
