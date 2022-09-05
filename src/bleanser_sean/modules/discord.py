@@ -15,7 +15,7 @@ https://github.com/seanbreckenridge/dotfiles/blob/2303661bf2e3c66ccdd67c7039f000
 
 So you can optionally set a different tempdir, and then run this while setting a tmpdir in ~/.cache instead:
 mkdir -p ~/.cache/tdir
-HPI_TEMPDIR=~/.cache/tdir python3 scripts/discord.py prune ~/data/discord/ --move ~/.cache/removed
+HPI_TEMPDIR=~/.cache/tdir python3 -m bleanser_sean.modules.discord prune ~/data/discord/ --move ~/.cache/removed
 """
 
 from pathlib import Path
@@ -26,7 +26,7 @@ from my.core.structure import match_structure
 from my.discord.data_export import EXPECTED_DISCORD_STRUCTURE
 from discord_data.parse import parse_messages
 
-from line_normalizer import LineNormalizer  # type: ignore[import]
+from ..line_normalizer import LineNormalizer
 
 
 class Normalizer(LineNormalizer):

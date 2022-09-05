@@ -1,4 +1,4 @@
-Scripts in `scripts` are run manually while in the root directory, e.g. `python3 ./scripts/...`
+After installing `bleanser_sean`, each of these can be run like `python3 -m bleanser_sean.modules.bash`
 
 ## Modules
 
@@ -7,7 +7,7 @@ Since these are to clean up data for my HPI modules, they require those to be in
 - `zsh` and `bash`, using the format I use from HPI. See the top of the files [on the HPI repo](https://github.com/seanbreckenridge/HPI) for what those look like
 - `ipython`, using the base `sqlite` normalizer
 - `chess` (for `chess.com`/`lichess` dumps) using a custom JSON normalizer
-- `discord` - **WARNING** see the top of [scripts/discord.py](scripts/discord.py) for how this works and some caveats
+- `discord` - **WARNING** see the top of [discord.py](src/bleanser_sean/modules/discord.py) for how this works and some caveats
 - `trakt`, for [traktexport](https://github.com/seanbreckenridge/traktexport) dumps
 - `listenbrainz`, for [listenbrainz](https://github.com/seanbreckenridge/listenbrainz_export)
 
@@ -19,7 +19,8 @@ pip install git+https://github.com/karlicoss/bleanser
 
 # clone/run stuff here
 git clone https://github.com/seanbreckenridge/bleanser
-python3 ./scripts/...
+pip install ./bleanser
+python3 -m bleanser_sean.modules....
 ```
 
 See [`bleanser-runall`](./bin/bleanser-runall) for examples

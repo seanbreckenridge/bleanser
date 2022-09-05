@@ -4,9 +4,6 @@
 set -o pipefail
 set -e
 
-THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
-cd "${THIS_DIR}/.." || exit $?
-
 main() {
 	local default_args args
 	mkdir -p ~/.cache/removed
@@ -15,18 +12,18 @@ main() {
 		args=("${default_args[@]}")
 		args+=(--sort-by "$sort_type")
 		for bash_dirs in ~/data/bash ~/data/bash_history; do
-			python3 ./scripts/bash.py prune "${bash_dirs}" "${default_args[@]}"
+			python3 -m bleanser_sean.modules.bash prune "${bash_dirs}" "${default_args[@]}"
 		done
 		for json_dir in ~/data/rexport ~/data/stackexchange; do
 			python3 -m bleanser.modules.json_new prune "${json_dir}" "${default_args[@]}"
 		done
 		for chess_glob in ~/data/chess/chessdotcom_2'*' ~/data/chess/lichess_2'*'; do
-			python3 ./scripts/chess.py prune --glob "${chess_glob}" "${default_args[@]}"
+			python3 -m bleanser_sean.modules.chess prune --glob "${chess_glob}" "${default_args[@]}"
 		done
-		python3 ./scripts/trakt.py prune --glob ~/data/trakt/2'*' "${default_args[@]}"
-		python3 ./scripts/listenbrainz.py prune --glob ~/data/listenbrainz/2'*' "${default_args[@]}"
-		python3 ./scripts/zsh.py prune ~/data/zsh_history "${default_args[@]}"
-		python3 ./scripts/ipython.py prune ~/data/ipython "${default_args[@]}"
+		python3 -m bleanser_sean.modules.trakt prune --glob ~/data/trakt/2'*' "${default_args[@]}"
+		python3 -m bleanser_sean.modules.listenbrainz prune --glob ~/data/listenbrainz/2'*' "${default_args[@]}"
+		python3 -m bleanser_sean.modules.zsh prune ~/data/zsh_history "${default_args[@]}"
+		python3 -m bleanser_sean.modules.ipython prune ~/data/ipython "${default_args[@]}"
 	done
 }
 
