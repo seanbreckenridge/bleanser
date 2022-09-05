@@ -1,5 +1,3 @@
-After installing `bleanser_sean`, each of these can be run like `python3 -m bleanser_sean.modules.bash`
-
 ## Modules
 
 Since these are to clean up data for my HPI modules, they require those to be installed, see my [HPI repo](https://github.com/seanbreckenridge/HPI#install)
@@ -11,7 +9,7 @@ Since these are to clean up data for my HPI modules, they require those to be in
 - `trakt`, for [traktexport](https://github.com/seanbreckenridge/traktexport) dumps
 - `listenbrainz`, for [listenbrainz](https://github.com/seanbreckenridge/listenbrainz_export)
 
-These are run while in this directory, so:
+## Install
 
 ```bash
 # install upstream bleanser
