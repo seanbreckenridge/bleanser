@@ -8,7 +8,7 @@ main() {
 	local default_args args
 	mkdir -p ~/.cache/removed
 	default_args=(--move ~/.cache/removed)
-	for sort_type in name size; do
+	for sort_type in size name; do
 		args=("${default_args[@]}")
 		args+=(--sort-by "$sort_type")
 		for bash_dirs in ~/data/bash ~/data/bash_history; do
