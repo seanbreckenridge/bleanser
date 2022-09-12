@@ -11,7 +11,7 @@ epoch() {
 main() {
 	local tmpdir tmpfile browsing_dir
 	tmpdir="$(mktemp -d)"
-	browsing_dir="$(python3 -m my.utils.backup_to browsing)"
+	browsing_dir="$(backup_to browsing)"
 	# backup anything that exists to cache
 	rsync -Pavh "${browsing_dir}"/ ~/.cache/browsing
 	tmpfile="${tmpdir}/browsing-$(epoch).json"
