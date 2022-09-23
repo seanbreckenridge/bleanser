@@ -1,19 +1,20 @@
-from sqlite3 import Connection
+from typing import Any, Iterator
+from pathlib import Path
 
-from bleanser.core.sqlite import SqliteNormaliser, Tool
+from my.ipython import _parse_database
+from ..line_normalizer import LineNormalizer
 
 
-class Normaliser(SqliteNormaliser):
+class Normaliser(LineNormalizer):
     MULTIWAY = True
     PRUNE_DOMINATED = True
 
-    def check(self, c: Connection) -> None:
-        tables = Tool(c).get_tables()
-        assert "history" in tables, tables
-        assert "sessions" in tables, tables
-
-    def cleanup(self, c: Connection) -> None:
-        self.check(c)
+    @classmethod
+    def parse_file(cls, path: Path) -> Iterator[Any]:
+        items = list(_parse_database(str(path)))
+        assert len(items) > 0, f"No history items in ipython database {path}"
+        for h in items:
+            yield f"{h.dt} {h.command}"
 
 
 if __name__ == "__main__":
