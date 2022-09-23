@@ -14,9 +14,6 @@ main() {
 		for bash_dirs in ~/data/bash ~/data/bash_history; do
 			python3 -m bleanser_sean.modules.bash prune "${bash_dirs}" "${default_args[@]}"
 		done
-		for json_dir in ~/data/rexport ~/data/stackexchange; do
-			python3 -m bleanser.modules.json_new prune "${json_dir}" "${default_args[@]}"
-		done
 		for chess_glob in ~/data/chess/chessdotcom_2'*' ~/data/chess/lichess_2'*'; do
 			python3 -m bleanser_sean.modules.chess prune --glob "${chess_glob}" "${default_args[@]}"
 		done
