@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# backs up browser databases to cache and merges all visits into a JSON file
+# merges mpv history files, see:
+# https://github.com/seanbreckenridge/mpv-history-daemon#merge
 
 set -o pipefail
 set -ex
