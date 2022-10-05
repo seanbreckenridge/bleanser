@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+
+declare removed_dir total_size
+removed_dir="${HOME}/.cache/removed"
+total_size="$(dir-size "${removed_dir}")"
+
+# if over one gig
+if ((total_size > 1000000000)); then
+  dust "${removed_dir}"
+  read -r -p 'Remove:'
+  rm -vrf "${removed_dir}"
+else
+  printf 'Size of %s under 1G\n' "$removed_dir"
+fi

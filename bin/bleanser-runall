@@ -5,9 +5,10 @@ set -o pipefail
 set -e
 
 main() {
-	local default_args args
-	mkdir -p ~/.cache/removed
-	default_args=(--move ~/.cache/removed)
+	local default_args args removed_dir
+	removed_dir="${HOME}/.cache/removed"
+	mkdir -p "${removed_dir}"
+	default_args=(--move "${removed_dir}" --yes)
 	for sort_type in size name; do
 		args=("${default_args[@]}")
 		args+=(--sort-by "$sort_type")
