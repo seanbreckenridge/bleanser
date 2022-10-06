@@ -5,16 +5,12 @@ set -o pipefail
 set -e
 
 main() {
-	local default_args args removed_dir
-	removed_dir="${HOME}/.cache/removed"
+	local removed_dir="${HOME}/.cache/removed"
 	mkdir -p "${removed_dir}"
-	default_args=(--move "${removed_dir}" --yes)
 	for sort_type in size name; do
 		prune_module() {
-			local -a args=()
 			local module_name
-			args=("${default_args[@]}")
-			args+=(--sort-by "$sort_type")
+			local -a args=(--move "${removed_dir}" --yes --sort-by "${sort_type}")
 			module_name="${1?pass module name}"
 			shift
 			args+=("$@")
