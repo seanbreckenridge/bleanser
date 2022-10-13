@@ -16,16 +16,16 @@ main() {
 			args+=("$@")
 			python3 -m bleanser_sean.modules."${module_name}" prune "${args[@]}" || return $?
 		}
+		prune_module zsh ~/data/zsh_history || return $?
 		prune_module bash ~/data/bash || return $?
 		prune_module bash ~/data/bash_history || return $?
+		prune_module ipython ~/data/ipython || return $?
 		prune_module smscalls --glob ~/data/SMSBackups/'sms-*' || return $?
 		prune_module smscalls --glob ~/data/SMSBackups/'calls-*' || return $?
 		prune_module chess --glob ~/data/chess/'chessdotcom_2*' || return $?
 		prune_module chess --glob ~/data/chess/'lichess_2*' || return $?
 		prune_module trakt --glob ~/data/trakt/'2*' || return $?
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
-		prune_module zsh ~/data/zsh_history || return $?
-		prune_module ipython ~/data/ipython || return $?
 	done
 }
 

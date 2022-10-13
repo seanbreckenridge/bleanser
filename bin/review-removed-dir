@@ -7,11 +7,11 @@ declare removed_dir total_size
 removed_dir="${HOME}/.cache/removed"
 total_size="$(dir-size "${removed_dir}")"
 
-# if over one gig
-if ((total_size > 1000000000)); then
+# if over 3 gigs
+if ((total_size > 3000000000)); then
 	dust "${removed_dir}"
 	read -r -p 'Remove dir? (Enter to remove/Ctrl+C to cancel): '
 	rm -vrf "${removed_dir}"
 else
-	printf 'Size of %s under 1G\n' "$removed_dir"
+	printf 'Size of %s under 3G\n' "$removed_dir"
 fi
