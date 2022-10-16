@@ -20,6 +20,7 @@ main() {
 		prune_module bash ~/data/bash || return $?
 		prune_module bash ~/data/bash_history || return $?
 		prune_module ipython ~/data/ipython || return $?
+		prune_module cstimer ~/data/cubing/cstimer || return $?
 		prune_module smscalls --glob ~/data/SMSBackups/'sms-*' || return $?
 		prune_module smscalls --glob ~/data/SMSBackups/'calls-*' || return $?
 		prune_module chess --glob ~/data/chess/'chessdotcom_2*' || return $?
