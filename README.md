@@ -9,7 +9,7 @@ Since these are to clean up data for my HPI modules, they require those to be in
 - `trakt`, for [traktexport](https://github.com/seanbreckenridge/traktexport) dumps
 - `listenbrainz`, for [listenbrainz](https://github.com/seanbreckenridge/listenbrainz_export)
 - `smscalls`, for [karlicoss SMSCalls](https://github.com/karlicoss/HPI/blob/master/my/smscalls.py) module (uses [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)) -- requires you to prune each type (`calls` and `sms` individually)
-- `cstimer` - backups of my <https://cstimer.net> server data, saved whenever I open the page by [cstimer-save-server](https://github.com/seanbreckenridge/cstimer-save-server)
+- rubiks cube history `cstimer` - backups of my <https://cstimer.net> server data, saved whenever I open the page by [cstimer-save-server](https://github.com/seanbreckenridge/cstimer-save-server), twistytimer (phone app) backups using [scramble-history](https://github.com/seanbreckenridge/scramble-history)
 
 ## Install
 
