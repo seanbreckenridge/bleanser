@@ -1,20 +1,33 @@
 #!/usr/bin/env bash
 # runs all bleanser jobs
+# if modules are passed as positional args
+# filters to only run those jobs
 
 set -o pipefail
 set -e
 
 main() {
+	local -a filter=("$@")
 	local removed_dir="${HOME}/.cache/removed"
 	mkdir -p "${removed_dir}"
 	for sort_type in size name; do
 		prune_module() {
-			local module_name
+			local module_name module
 			local -a args=(--move "${removed_dir}" --yes --sort-by "${sort_type}")
 			module_name="${1?pass module name}"
 			shift
+			module="${module_name}"
+			[[ "${module}" =~ *.* ]] || module="bleanser_sean.modules.${module}"
+			if ((${#filter[@]} > 0)); then
+				for f in "${filter[@]}"; do
+					[[ "$f" == "$module" ]] || {
+						printf 'Skipping %s, does not match filter\n' "$module"
+						return 0
+					}
+				done
+			fi
 			args+=("$@")
-			python3 -m bleanser_sean.modules."${module_name}" prune "${args[@]}" || return $?
+			python3 -m "${module}" prune "${args[@]}" || return $?
 		}
 		prune_module zsh ~/data/zsh_history || return $?
 		prune_module bash ~/data/bash || return $?
@@ -30,6 +43,7 @@ main() {
 		prune_module trakt --glob ~/data/trakt/'2*' || return $?
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
 	done
+	dust "$removed_dir"
 }
 
-main || exit $?
+main "$@" || exit $?
