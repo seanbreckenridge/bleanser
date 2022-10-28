@@ -19,7 +19,6 @@ main() {
 	rm -v "${browsing_dir}/"*
 	mv -v "${tmpfile}" "${browsing_dir}"
 	dust "${browsing_dir}"
-	rm -i ~/.cache/removed/browsing/*.json
 }
 
 main || exit $?
