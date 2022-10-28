@@ -17,7 +17,7 @@ main() {
 			module_name="${1?pass module name}"
 			shift
 			module="${module_name}"
-			[[ "${module}" =~ *.* ]] || module="bleanser_sean.modules.${module}"
+			[[ "${module}" == *.* ]] || module="bleanser_sean.modules.${module}"
 			if ((${#filter[@]} > 0)); then
 				for f in "${filter[@]}"; do
 					[[ "$f" == "$module" ]] || {
@@ -43,7 +43,7 @@ main() {
 		prune_module trakt --glob ~/data/trakt/'2*' || return $?
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
 	done
-	dust "$removed_dir"
+	dust -c "$removed_dir"
 }
 
 main "$@" || exit $?
