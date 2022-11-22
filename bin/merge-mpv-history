@@ -13,9 +13,9 @@ main() {
 	rsync -Pavh "${mpv_dir}"/ "$move_to"
 	# https://sean.fish/d/epoch?dark
 	write_to="${mpv_dir}/merged-$(epoch).json"
-	mpv-history-daemon merge "${mpv_dir}" --move "${move_to}" --write-to "${write_to}"
+	mpv-history-daemon merge "${mpv_dir}" --move "${move_to}" --write-to "${write_to}" "$@"
 	dust "${mpv_dir}"
 	rm -i "${move_to}"/merged-*.json
 }
 
-main || exit $?
+main "$@" || exit $?
