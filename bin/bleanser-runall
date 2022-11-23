@@ -32,7 +32,8 @@ main() {
 		prune_module zsh ~/data/zsh_history || return $?
 		prune_module bash ~/data/bash || return $?
 		prune_module bash ~/data/bash_history || return $?
-		prune_module ipython ~/data/ipython || return $?
+		prune_module ipython ~/data/ipython_default || return $?
+		prune_module ipython ~/data/ipython_calculator/ || return $?
 		prune_module cstimer ~/data/cubing/cstimer || return $?
 		prune_module twistytimer ~/data/cubing/cubers_io || return $?
 		prune_module twistytimer ~/data/cubing/phone_twistytimer || return $?
