@@ -29,7 +29,7 @@ main() {
 	tempdir="$(mktemp -d)"
 	SOURCE_DIR="$(backup_to "$source_name")"
 	move_to="${HOME}/.cache/${source_name}_removed"
-	# https://sean.fish/d/epoch?dark
+	# https://github.com/seanbreckenridge/core/blob/main/shellscripts/epoch
 	write_to="${tempdir}/merged-$(epoch).csv"
 
 	# backup to cache
