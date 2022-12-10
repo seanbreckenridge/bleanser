@@ -29,6 +29,7 @@ main() {
 			args+=("$@")
 			python3 -m "${module}" prune "${args[@]}" || return $?
 		}
+		prune_module grouvee ~/data/grouvee || return $?
 		prune_module zsh ~/data/zsh_history || return $?
 		prune_module bash ~/data/bash || return $?
 		prune_module bash ~/data/bash_history || return $?
