@@ -2,12 +2,21 @@
 # runs all bleanser jobs
 # if modules are passed as positional args
 # filters to only run those jobs
+#
+# can pass DRY_RUN=1 to see commands
 
 set -o pipefail
 set -e
 
 main() {
-	local -a filter=("$@")
+	local -a filter=()
+	for arg in "$@"; do
+		if [[ "${module}" == *.* ]]; then
+			filter+=("$arg")
+		else
+			filter+=("bleanser_sean.modules.${arg}")
+		fi
+	done
 	local removed_dir="${HOME}/.cache/removed"
 	mkdir -p "${removed_dir}"
 	for sort_type in size name; do
@@ -19,15 +28,17 @@ main() {
 			module="${module_name}"
 			[[ "${module}" == *.* ]] || module="bleanser_sean.modules.${module}"
 			if ((${#filter[@]} > 0)); then
-				for f in "${filter[@]}"; do
-					[[ "$f" == "$module" ]] || {
-						printf 'Skipping %s, does not match filter\n' "$module"
-						return 0
-					}
-				done
+				if ! (IFS=' ' echo "${filter[*]}") | tr ' ' '\n' | grep -xq "$module"; then
+					printf 'Skipping %s, does not match filter\n' "$module"
+					return 0
+				fi
 			fi
 			args+=("$@")
-			python3 -m "${module}" prune "${args[@]}" || return $?
+			if [[ -n "$DRY_RUN" ]]; then
+				echo python3 -m "${module}" prune "${args[@]}"
+			else
+				python3 -m "${module}" prune "${args[@]}" || return $?
+			fi
 		}
 		prune_module grouvee ~/data/grouvee || return $?
 		prune_module zsh ~/data/zsh_history || return $?
