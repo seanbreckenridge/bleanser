@@ -3,30 +3,53 @@
 # if modules are passed as positional args
 # filters to only run those jobs
 #
-# can pass DRY_RUN=1 to see commands
+# can pass -n to run a dry run
 
 set -o pipefail
 set -e
 
+modname() {
+	if [[ "$1" == *.* ]]; then
+		echo "$1"
+	else
+		echo "bleanser_sean.modules.$1"
+	fi
+}
+
 main() {
 	local -a filter=()
-	for arg in "$@"; do
-		if [[ "${module}" == *.* ]]; then
-			filter+=("$arg")
-		else
-			filter+=("bleanser_sean.modules.${arg}")
-		fi
-	done
+	local -a sort_types=()
+	local dry_run=0
 	local removed_dir="${HOME}/.cache/removed"
+	while getopts "nt:" OPT; do
+		case "$OPT" in
+		t)
+			if [[ "$OPTARG" == 'name' ]] || [[ "$OPTARG" == 'size' ]]; then
+				sort_types+=("$OPTARG")
+			else
+				printf 'Unknown sort type (must be "sort" or "name"): %s\n' "$OPTARG" >&2
+			fi
+			;;
+		n)
+			dry_run=1
+			;;
+		*)
+			printf 'Unknown arg: %s\n' "$OPTARG" >&2
+			;;
+		esac
+	done
+	shift "$((OPTIND - 1))"
+	for arg in "$@"; do
+		filter+=("$(modname "$arg")")
+	done
+	((${#sort_types[@]} == 0)) && sort_types+=("size" "name")
 	mkdir -p "${removed_dir}"
-	for sort_type in size name; do
+	for sort_type in "${sort_types[@]}"; do
 		prune_module() {
-			local module_name module
+			local module
 			local -a args=(--move "${removed_dir}" --yes --sort-by "${sort_type}")
-			module_name="${1?pass module name}"
+			module="$(modname "${1?pass module name}")"
 			shift
-			module="${module_name}"
-			[[ "${module}" == *.* ]] || module="bleanser_sean.modules.${module}"
 			if ((${#filter[@]} > 0)); then
 				if ! (IFS=' ' echo "${filter[*]}") | tr ' ' '\n' | grep -xq "$module"; then
 					printf 'Skipping %s, does not match filter\n' "$module"
@@ -34,7 +57,7 @@ main() {
 				fi
 			fi
 			args+=("$@")
-			if [[ -n "$DRY_RUN" ]]; then
+			if ((dry_run)); then
 				echo python3 -m "${module}" prune "${args[@]}"
 			else
 				python3 -m "${module}" prune "${args[@]}" || return $?
@@ -56,7 +79,7 @@ main() {
 		prune_module trakt --glob ~/data/trakt/'2*' || return $?
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
 	done
-	dust -c "$removed_dir"
+	hash dust && dust -c "$removed_dir"
 }
 
 main "$@" || exit $?
