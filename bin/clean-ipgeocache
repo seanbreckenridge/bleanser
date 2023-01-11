@@ -1,0 +1,18 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+
+from seanb.jsonfast import loads, dumps
+from ipgeocache import get_cache_dir
+
+
+def main() -> None:
+    for file in filter(Path.is_file, Path(get_cache_dir()).iterdir()):
+        data = loads(file.read_text())
+        if data.pop("readme", None):
+            print(f"Removed 'readme' from {file}")
+            file.write_text(dumps(data))
+
+
+if __name__ == "__main__":
+    main()
