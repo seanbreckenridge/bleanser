@@ -15,7 +15,8 @@ main() {
 	# backup anything that exists to cache
 	rsync -Pavh "${browsing_dir}"/ ~/.cache/removed/browsing
 	tmpfile="${tmpdir}/browsing-$(epoch).json"
-	browserexport --debug merge --json "${browsing_dir}/"* | jq -c >"$tmpfile"
+	browserexport --debug merge --json "${browsing_dir}/"* >"$tmpfile"
+	json-compress "$tmpfile"
 	rm -v "${browsing_dir}/"*
 	mv -v "${tmpfile}" "${browsing_dir}"
 	dust "${browsing_dir}"
