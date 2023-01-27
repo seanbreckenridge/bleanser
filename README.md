@@ -9,6 +9,7 @@ Since these are to clean up data for my HPI modules, they require those to be in
 - `discord` - **WARNING** see the top of [discord.py](src/bleanser_sean/modules/discord.py) for how this works and some caveats
 - `trakt`, for [traktexport](https://github.com/seanbreckenridge/traktexport) dumps
 - `listenbrainz`, for [listenbrainz](https://github.com/seanbreckenridge/listenbrainz_export)
+- `mal_zips`: for [backup mal zips](https://github.com/seanbreckenridge/malexport/#recover_deleted)
 - `smscalls`, for [karlicoss SMSCalls](https://github.com/karlicoss/HPI/blob/master/my/smscalls.py) module (uses [SMS Backup & Restore](https://play.google.com/store/apps/details?id=com.riteshsahu.SMSBackupRestore&hl=en_US)) -- requires you to prune each type (`calls` and `sms` individually)
 - rubiks cube history `cstimer` - backups of my <https://cstimer.net> server data, saved whenever I open the page by [cstimer-save-server](https://github.com/seanbreckenridge/cstimer-save-server), twistytimer (phone app) backups using [scramble-history](https://github.com/seanbreckenridge/scramble-history)
 - `grouvee` exports using [`grouvee_export`](https://github.com/seanbreckenridge/grouvee_export)

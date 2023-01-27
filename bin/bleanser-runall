@@ -63,6 +63,7 @@ main() {
 				python3 -m "${module}" prune "${args[@]}" || return $?
 			fi
 		}
+
 		prune_module grouvee ~/data/grouvee || return $?
 		prune_module zsh ~/data/zsh_history || return $?
 		prune_module bash ~/data/bash || return $?
@@ -79,6 +80,12 @@ main() {
 		prune_module trakt --glob ~/data/trakt/'2*' || return $?
 		prune_module activitywatch --glob ~/data/aw-window/phone/'*.json' || return $?
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
+		if wait-for-internet --timeout 10; then
+			python3 -m malexport recover-deleted approved-update || true
+		fi
+		find ~/data/malexport_backups -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
+			prune_module mal_zips --glob "${username}"/'*.zip' || return $?
+		done
 	done
 	hash dust && dust -c "$removed_dir"
 }
