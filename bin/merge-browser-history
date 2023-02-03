@@ -20,6 +20,7 @@ main() {
 	rm -v "${browsing_dir}/"*
 	mv -v "${tmpfile}" "${browsing_dir}"
 	dust "${browsing_dir}"
+	gum spin --title='Checking merged history' -- hpi query my.browser.export.history || notify -u critical 'browser merge failed'
 }
 
 main || exit $?
