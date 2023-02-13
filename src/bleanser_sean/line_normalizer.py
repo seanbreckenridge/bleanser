@@ -1,3 +1,10 @@
+"""
+A helper class that other normalizers can inherit from
+Handles a lot of the boilerplate for normalizing sources,
+converting each file to lines of text, sorting, and then
+diffing them to remove redundant backups
+"""
+
 import re
 import json
 from pathlib import Path
@@ -8,11 +15,14 @@ from subprocess import check_call
 from bleanser.core.processor import BaseNormaliser
 
 
-def unique_tmpfile(path: Path, wdir: Path) -> Path:
+def unique_tmpfile(path: Path, wdir: Path, filename: str) -> Path:
     tmp_source_dir = path.absolute().resolve()
+    ext = Path(filename).suffix
     # name/location in tmpdir
     fingerprint = (
-        wdir / Path(*tmp_source_dir.parts[1:]) / (tmp_source_dir.name + "-fingerprint")
+        wdir
+        / Path(*tmp_source_dir.parts[1:])
+        / (tmp_source_dir.name + "-fingerprint" + ext)
     )
     fingerprint.parent.mkdir(parents=True, exist_ok=True)
     return fingerprint
@@ -61,10 +71,11 @@ class LineNormalizer(BaseNormaliser):
 
         # if this needs to be unpacked, do that
         with self.unpacked(path=path, wdir=wdir) as upath:
+            filename = path.name
             del path
 
             # create a unique temporary file to write data to
-            cleaned = unique_tmpfile(upath, wdir)
+            cleaned = unique_tmpfile(upath, wdir, filename)
             # write to it, typically handled by a subclass
             self.__class__.emit_history(upath, cleaned)
 
