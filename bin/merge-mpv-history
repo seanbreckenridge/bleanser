@@ -6,16 +6,19 @@ set -o pipefail
 set -ex
 
 main() {
-	local write_to mpv_dir move_to
+	local write_to mpv_dir backup_dir removed_dir
 	mpv_dir="$(backup_to mpv)"
-	move_to="${HOME}/.cache/mpv_removed"
+	backup_dir="${HOME}/.cache/mpv_removed"
 	# backup anything that exists to cache
-	rsync -Pavh "${mpv_dir}"/ "$move_to"
+	rsync -Pavh "${mpv_dir}"/ "$backup_dir"
 	# https://github.com/seanbreckenridge/core/blob/main/shellscripts/epoch
 	write_to="${mpv_dir}/merged-$(epoch).json"
-	mpv-history-daemon merge "${mpv_dir}" --move "${move_to}" --write-to "${write_to}" "$@"
+	mpv-history-daemon merge "${mpv_dir}" --move "${backup_dir}" --write-to "${write_to}" "$@"
 	dust "${mpv_dir}"
-	rm -i "${move_to}"/merged-*.json
+	# move any previously merged files to a separate directory
+	removed_dir="${HOME}/.cache/removed/mpv"
+	mkdir -p "$removed_dir"
+	mv -v "${backup_dir}"/merged-*.json "${removed_dir}"
 	gum spin --title='Checking merged history' -- hpi query my.mpv.history_daemon.history || notify -u critical 'mpv history merge failed'
 }
 
