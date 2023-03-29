@@ -82,10 +82,10 @@ main() {
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
 		if wait-for-internet --timeout 10; then
 			python3 -m malexport recover-deleted approved-update || true
+			find "${HPIDATA}/malexport_backups" -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
+				prune_module mal_zips --glob "${username}"/'*.zip' || return $?
+			done
 		fi
-		find ~/data/malexport_backups -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
-			prune_module mal_zips --glob "${username}"/'*.zip' || return $?
-		done
 	done
 	hash dust && dust -c "$removed_dir"
 }

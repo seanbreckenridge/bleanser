@@ -13,6 +13,7 @@ main() {
 	tmpdir="$(mktemp -d)"
 	browsing_dir="$(backup_to browsing)"
 	# backup anything that exists to cache
+	mkdir -p ~/.cache/removed/browsing
 	rsync -Pavh "${browsing_dir}"/ ~/.cache/removed/browsing
 	tmpfile="${tmpdir}/browsing-$(epoch).json"
 	browserexport --debug merge --json "${browsing_dir}/"* >"$tmpfile"
