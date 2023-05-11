@@ -17,10 +17,14 @@ class Normalizer(LineNormalizer):
     def parse_file(cls, path: Path) -> Iterator[Any]:
         if "calls" in path.stem:
             for call in _extract_calls(path):
+                if isinstance(call, Exception):
+                    continue
                 yield f"{call.dt} {call.who}"
         else:
             assert "sms" in path.stem, f"calls or sms needs to be in path name {path}"
             for sms in _extract_messages(path):
+                if isinstance(sms, Exception):
+                    continue
                 yield f"{sms.dt} {sms.who}"
 
 

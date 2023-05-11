@@ -43,6 +43,8 @@ class Normalizer(LineNormalizer):
     @classmethod
     def parse_file(cls, path: Path) -> Iterator[Any]:
         for msg in parse_messages(path / "messages"):
+            if isinstance(msg, Exception):
+                continue
             yield msg.message_id
 
 
