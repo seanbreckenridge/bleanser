@@ -80,11 +80,14 @@ main() {
 		prune_module trakt --glob ~/data/trakt/'2*' || return $?
 		prune_module activitywatch --glob ~/data/aw-window/phone/'*.json' || return $?
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
-		if wait-for-internet --timeout 10; then
-			python3 -m malexport recover-deleted approved-update || true
-			find "${HPIDATA}/malexport_backups" -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
-				prune_module mal_zips --glob "${username}"/'*.zip' || return $?
-			done
+		# running mal_zips by size doesnt work well, as it removes newer, smaller exports (since history size has shrunk)
+		if [[ "$sort_type" == 'name' ]]; then
+			if wait-for-internet --timeout 10; then
+				python3 -m malexport recover-deleted approved-update || true
+				find "${HPIDATA}/malexport_backups" -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
+					prune_module mal_zips --glob "${username}"/'*.zip' || return $?
+				done
+			fi
 		fi
 	done
 	hash dust && dust -c "$removed_dir"
