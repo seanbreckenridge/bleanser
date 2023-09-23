@@ -15,13 +15,13 @@ main() {
 	# backup anything that exists to cache
 	mkdir -p ~/.cache/removed/browsing
 	rsync -Pavh "${browsing_dir}"/ ~/.cache/removed/browsing
-	tmpfile="${tmpdir}/browsing-$(epoch).json"
-	browserexport --debug merge --json "${browsing_dir}/"* >"$tmpfile"
-	json-compress "$tmpfile"
+	tmpfile="${tmpdir}/browsing-$(epoch).jsonl.gz"
+	browserexport --debug merge --json --stream "${browsing_dir}/"* | gzip --best | sponge "${tmpfile}"
 	rm -v "${browsing_dir}/"*
 	mv -v "${tmpfile}" "${browsing_dir}"
 	dust "${browsing_dir}"
-	gum spin --title='Checking merged history' -- hpi query my.browser.export.history || notify -u critical 'browser merge failed'
+	visit_count="$(hpi query my.browser.export.history | jq length | numfmt --grouping)"
+	notify "browsing has ${visit_count} visits"
 }
 
 main || exit $?

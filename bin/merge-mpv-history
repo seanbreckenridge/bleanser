@@ -20,8 +20,7 @@ main() {
 	mkdir -p "$removed_dir"
 	mv -v "${backup_dir}"/merged-*.json "${removed_dir}"
 	gum spin --title='Checking merged history' -- hpi query my.mpv.history_daemon.history || notify -u critical 'mpv history merge failed'
-	local mpv_count
-	mpv_count="$(hpi query my.mpv.history_daemon.history | jq length)"
+	mpv_count="$(hpi query my.mpv.history_daemon.history | jq length | numfmt --grouping)"
 	notify "Merged mpv history has ${mpv_count} entries"
 }
 

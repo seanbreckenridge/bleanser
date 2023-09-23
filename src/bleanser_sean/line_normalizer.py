@@ -38,7 +38,7 @@ class LineNormalizer(BaseNormaliser):
     Given a input path, the `parse_file` function returns something that
     can be converted to a string, to represent a unique 'snapshot' for this file
 
-    those can then be compared to elliminate redundant backups
+    those can then be compared to eliminate redundant backups
     """
 
     MULTIWAY = True
