@@ -11,7 +11,7 @@ main() {
 	backup_dir="${HOME}/.cache/mpv_removed"
 	# backup anything that exists to cache
 	rsync -Pavh "${mpv_dir}"/ "$backup_dir"
-	# https://github.com/seanbreckenridge/core/blob/main/shellscripts/epoch
+	# https://github.com/seanbreckenridge/seanb-utils/blob/main/shellscripts/epoch
 	write_to="${mpv_dir}/merged-$(epoch).json"
 	mpv-history-daemon merge "${mpv_dir}" --move "${backup_dir}" --write-to "${write_to}" "$@"
 	dust "${mpv_dir}"
