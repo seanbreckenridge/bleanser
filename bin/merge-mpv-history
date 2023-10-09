@@ -13,7 +13,7 @@ main() {
 	rsync -Pavh "${mpv_dir}"/ "$backup_dir"
 	# https://github.com/seanbreckenridge/seanb-utils/blob/main/shellscripts/epoch
 	write_to="${mpv_dir}/merged-$(epoch).json"
-	mpv-history-daemon merge "${mpv_dir}" --move "${backup_dir}" --write-to "${write_to}" "$@"
+	python3 -m mpv_history_daemon merge "${mpv_dir}" --move "${backup_dir}" --write-to "${write_to}" "$@"
 	dust "${mpv_dir}"
 	# move any previously merged files to a separate directory
 	removed_dir="${HOME}/.cache/removed/mpv"

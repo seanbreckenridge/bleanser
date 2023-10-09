@@ -16,7 +16,7 @@ main() {
 	mkdir -p ~/.cache/removed/browsing
 	rsync -Pavh "${browsing_dir}"/ ~/.cache/removed/browsing
 	tmpfile="${tmpdir}/browsing-$(epoch).jsonl.gz"
-	browserexport --debug merge --json --stream "${browsing_dir}/"* | gzip --best | sponge "${tmpfile}"
+	python3 -m browserexport --debug merge --json --stream "${browsing_dir}/"* | gzip --best | sponge "${tmpfile}"
 	rm -v "${browsing_dir}/"*
 	mv -v "${tmpfile}" "${browsing_dir}"
 	dust "${browsing_dir}"
