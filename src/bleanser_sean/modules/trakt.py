@@ -1,11 +1,13 @@
-from typing import Iterator, Any, Dict
+import orjson
+from pathlib import Path
+from typing import Iterator, Any
 
-from ..line_normalizer import JsonLineNormalizer
+from bleanser.core.modules.extract import ExtractObjectsNormaliser
 
 
-class Normalizer(JsonLineNormalizer):
-    @classmethod
-    def handle_json(cls, data: Dict[Any, Any]) -> Iterator[Any]:
+class Normalizer(ExtractObjectsNormaliser):
+    def extract_objects(self, path: Path) -> Iterator[Any]:
+        data = orjson.loads(path.read_bytes())
         for b in data["history"]:
             yield b["id"]
 
