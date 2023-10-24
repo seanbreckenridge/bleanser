@@ -6,9 +6,6 @@ from ..line_normalizer import LineNormalizer
 
 
 class Normaliser(LineNormalizer):
-    MULTIWAY = True
-    PRUNE_DOMINATED = True
-
     @classmethod
     def parse_file(cls, path: Path) -> Iterator[Any]:
         items = list(_parse_database(str(path)))

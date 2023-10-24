@@ -30,9 +30,6 @@ from ..line_normalizer import LineNormalizer
 
 
 class Normalizer(LineNormalizer):
-    MULTIWAY = True
-    PRUNE_DOMINATED = True
-
     @contextmanager
     def unpacked(self, path: Path, *, wdir: Path) -> Iterator[Path]:
         # match structure unzips the file if needed to /tmp

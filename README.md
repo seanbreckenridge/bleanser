@@ -26,6 +26,6 @@ pip install ./bleanser
 python3 -m bleanser_sean.modules....
 ```
 
-See [`bleanser-runall`](./bin/bleanser-runall) for examples, example [`bleanser-runall -n`](https://gist.github.com/seanbreckenridge/e97e4776181efcca2b19b0d7ffc1d0ed)  (dry-run) output
+See [`bleanser-runall`](./bin/bleanser-runall) for examples, example [`bleanser-runall -n`](https://gist.github.com/seanbreckenridge/e97e4776181efcca2b19b0d7ffc1d0ed) (dry-run) output
 
 `bin` includes some scripts that I add to my `$PATH` to make running bleanser scripts easier

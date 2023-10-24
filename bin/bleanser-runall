@@ -82,12 +82,14 @@ main() {
 		prune_module listenbrainz --glob ~/data/listenbrainz/'2*' || return $?
 		# running mal_zips by size doesn't work well, as it removes newer, smaller exports (since history size has shrunk)
 		if [[ "$sort_type" == 'name' ]]; then
-			if wait-for-internet --timeout 10; then
-				((dry_run)) || python3 -m malexport recover-deleted approved-update || true
-				find "${HPIDATA}/malexport_backups" -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
-					prune_module mal_zips --glob "${username}"/'*.zip' || return $?
-				done
-			fi
+			((dry_run)) || {
+				if wait-for-internet --timeout 10; then
+					python3 -m malexport recover-deleted approved-update || true
+				fi
+			}
+			find "${HPIDATA}/malexport_backups" -mindepth 1 -type d -print0 | while read -r -d $'\0' username; do
+				prune_module mal_zips --glob "${username}"/'*.zip' || return $?
+			done
 		fi
 	done
 	hash dust && {
