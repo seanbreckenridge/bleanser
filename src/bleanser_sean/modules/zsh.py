@@ -3,12 +3,11 @@ from typing import Iterator, Any
 
 from my.zsh import _parse_file
 
-from ..line_normalizer import LineNormalizer
+from bleanser.core.modules.extract import ExtractObjectsNormaliser
 
 
-class Normalizer(LineNormalizer):
-    @classmethod
-    def parse_file(cls, path: Path) -> Iterator[Any]:
+class Normalizer(ExtractObjectsNormaliser):
+    def extract_objects(self, path: Path) -> Iterator[Any]:
         for e in _parse_file(path):
             yield f"{int(e.dt.timestamp())} {e.duration} {e.command}"
 

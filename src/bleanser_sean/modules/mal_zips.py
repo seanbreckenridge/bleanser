@@ -14,21 +14,17 @@ from malexport.parse.recover_deleted_entries import (
     Approved,
 )
 
-from ..line_normalizer import LineNormalizer
+from bleanser.core.modules.extract import ExtractObjectsNormaliser
 
 
-class Normalizer(LineNormalizer):
-    MULTIWAY = True
-    PRUNE_DOMINATED = True
-
+class Normaliser(ExtractObjectsNormaliser):
     @contextmanager
     def unpacked(self, path: Path, *, wdir: Path) -> Iterator[Path]:
         # match structure unzips the file if needed to /tmp
         with match_structure(path, expected=EXPECTED_FILES, partial=True) as matches:
             yield matches[0]
 
-    @classmethod
-    def parse_file(cls, path: Path) -> Iterator[Any]:
+    def extract_objects(self, path: Path) -> Iterator[Any]:
         anime, manga = recover_deleted_single(
             username="",
             approved=Approved.parse_from_git_dir(),
@@ -50,4 +46,4 @@ class Normalizer(LineNormalizer):
 
 
 if __name__ == "__main__":
-    Normalizer.main()
+    Normaliser.main()

@@ -9,12 +9,11 @@ from typing import Iterator, Any
 
 from my.smscalls import _extract_calls, _extract_messages
 
-from ..line_normalizer import LineNormalizer
+from bleanser.core.modules.extract import ExtractObjectsNormaliser
 
 
-class Normalizer(LineNormalizer):
-    @classmethod
-    def parse_file(cls, path: Path) -> Iterator[Any]:
+class Normaliser(ExtractObjectsNormaliser):
+    def extract_objects(self, path: Path) -> Iterator[Any]:
         if "calls" in path.stem:
             for call in _extract_calls(path):
                 if isinstance(call, Exception):
@@ -29,4 +28,4 @@ class Normalizer(LineNormalizer):
 
 
 if __name__ == "__main__":
-    Normalizer.main()
+    Normaliser.main()

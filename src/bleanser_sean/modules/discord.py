@@ -26,10 +26,10 @@ from my.core.structure import match_structure
 from my.discord.data_export import EXPECTED_DISCORD_STRUCTURE
 from discord_data.parse import parse_messages
 
-from ..line_normalizer import LineNormalizer
+from bleanser.core.modules.extract import ExtractObjectsNormaliser
 
 
-class Normalizer(LineNormalizer):
+class Normaliser(ExtractObjectsNormaliser):
     @contextmanager
     def unpacked(self, path: Path, *, wdir: Path) -> Iterator[Path]:
         # match structure unzips the file if needed to /tmp
@@ -37,8 +37,7 @@ class Normalizer(LineNormalizer):
             assert len(matches) == 1, matches
             yield matches[0]
 
-    @classmethod
-    def parse_file(cls, path: Path) -> Iterator[Any]:
+    def extract_objects(self, path: Path) -> Iterator[Any]:
         for msg in parse_messages(path / "messages"):
             if isinstance(msg, Exception):
                 continue
@@ -46,4 +45,4 @@ class Normalizer(LineNormalizer):
 
 
 if __name__ == "__main__":
-    Normalizer.main()
+    Normaliser.main()
