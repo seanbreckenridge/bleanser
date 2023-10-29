@@ -5,7 +5,7 @@ from typing import Iterator, Any
 from bleanser.core.modules.extract import ExtractObjectsNormaliser
 
 
-class Normalizer(ExtractObjectsNormaliser):
+class Normaliser(ExtractObjectsNormaliser):
     def extract_objects(self, path: Path) -> Iterator[Any]:
         data = orjson.loads(path.read_bytes())
         for b in data["history"]:
@@ -13,4 +13,4 @@ class Normalizer(ExtractObjectsNormaliser):
 
 
 if __name__ == "__main__":
-    Normalizer.main()
+    Normaliser.main()
