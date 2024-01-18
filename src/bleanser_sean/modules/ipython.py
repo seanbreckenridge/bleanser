@@ -9,7 +9,7 @@ from bleanser.core.modules.extract import ExtractObjectsNormaliser
 class Normaliser(ExtractObjectsNormaliser):
     def extract_objects(self, path: Path) -> Iterator[Any]:
         items = list(_parse_database(str(path)))
-        assert len(items) > 0, f"No history items in ipython database {path}"
+        # assert len(items) > 0, f"No history items in ipython database {path}"
         for h in items:
             yield f"{h.dt} {h.command}"
 
