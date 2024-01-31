@@ -1,0 +1,42 @@
+#!/usr/bin/env python3
+
+from pathlib import Path
+from typing import NamedTuple, Iterator
+
+import click
+from my.ipython import inputs, _parse_database, logger
+
+
+class Result(NamedTuple):
+    path: Path
+    items: int
+
+
+def compute_results(verbose: bool) -> Iterator[Result]:
+    for path in inputs():
+        if verbose:
+            logger.info(f"processing {path}")
+        items = list(_parse_database(str(path)))
+        yield Result(path=path, items=len(items))
+
+
+@click.command()
+@click.option("-v", "--verbose", is_flag=True, help="print debug info")
+def main(verbose: bool) -> None:
+    results = []
+    for res in compute_results(verbose):
+        if verbose:
+            logger.info(f"{res.path} {res.items}")
+        results.append(res)
+
+    # make sure that at least one thing parsed correctly
+    assert any(r.items > 0 for r in results), "no items parsed from any db"
+
+    for res in results:
+        if res.items == 0:
+            logger.warning(f"removing {res.path}")
+            res.path.unlink()
+
+
+if __name__ == "__main__":
+    main()

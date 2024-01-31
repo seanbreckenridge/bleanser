@@ -3,23 +3,56 @@
 """
 Merges (so duplicate events can be removed)
 all ghexport events into a single JSON file
-
-Example:
-arctee 'merged_{utcnow}.json' -- dedupe-ghexport
-
-If the new merged file looks correct, you can remove
-the other JSON files
 """
 
-import orjson
+import os
+import tempfile
+import shutil
 
+import click
+import orjson
+from arctee import replace_placeholders
 from ghexport.dal import DAL
 from my.github.ghexport import inputs
 
 
-def main() -> None:
-    events = list(DAL(sources=inputs()).events())
-    print(orjson.dumps(events).decode("utf-8"))
+@click.command()
+@click.option(
+    "--move-files",
+    is_flag=True,
+    help="move merged files to '~/.cache/removed/ghexport'",
+)
+@click.option("--output", default="merged_{utcnow}.json", help="output file pattern")
+def main(move_files: bool, output: str) -> None:
+    input_files = list(inputs())
+    if not input_files:
+        click.echo("no input files found", err=True)
+        return
+    events = list(DAL(sources=input_files).events())
+    out: bytes = orjson.dumps(events)
+    outfile = replace_placeholders(output)
+    outdir = os.path.dirname(input_files[0])
+
+    # write to a tempfile so if something goes wrong, we don't lose the original files
+    with tempfile.NamedTemporaryFile(mode="wb", delete=False) as f:
+        click.echo(f"writing backup to to {f.name}", err=True)
+        f.write(out)
+        f.flush()
+
+    target = os.path.join(outdir, outfile)
+    click.echo(f"writing merged events to {target}", err=True)
+    with open(target, "wb") as f:
+        f.write(out)
+
+    to_dir = os.path.expanduser("~/.cache/removed/ghexport")
+    if not os.path.exists(to_dir):
+        os.makedirs(to_dir)
+
+    if move_files:
+        click.echo("moving files to ~/.cache/removed/ghexport", err=True)
+        for i in input_files:
+            click.echo(f"moving {i} to {to_dir}", err=True)
+            shutil.move(i, to_dir)
 
 
 if __name__ == "__main__":
