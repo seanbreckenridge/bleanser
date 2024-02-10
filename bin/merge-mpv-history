@@ -6,7 +6,7 @@ set -o pipefail
 set -ex
 
 main() {
-	local write_to mpv_dir backup_dir removed_dir
+	local write_to mpv_dir backup_dir
 	mpv_dir="$(backup_to mpv)"
 	backup_dir="${HOME}/.cache/mpv_removed"
 	# backup anything that exists to cache
@@ -14,11 +14,9 @@ main() {
 	# https://github.com/seanbreckenridge/seanb-utils/blob/main/shellscripts/epoch
 	write_to="${mpv_dir}/merged-$(epoch).json"
 	python3 -m mpv_history_daemon merge "${mpv_dir}" --move "${backup_dir}" --write-to "${write_to}" "$@"
+	gzip --best "${write_to}"  # compress the merged file
 	dust "${mpv_dir}"
-	# move any previously merged files to a separate directory
-	removed_dir="${HOME}/.cache/removed/mpv"
-	mkdir -p "$removed_dir"
-	mv -v "${backup_dir}"/merged-*.json "${removed_dir}"
+	# test that the merged history is valid
 	gum spin --title='Checking merged history' -- hpi query my.mpv.history_daemon.history || notify -u critical 'mpv history merge failed'
 	mpv_count="$(hpi query my.mpv.history_daemon.history | jq length | numfmt --grouping)"
 	notify "Merged mpv history has ${mpv_count} entries"
